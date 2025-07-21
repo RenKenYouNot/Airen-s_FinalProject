@@ -54,8 +54,23 @@ const houseFounder = ["Godric Gryffindor", "Rowena Ravenclaw", "Salazar Slytheri
             resultTextElement.textContent = "I sense bravery, and a desire to help others.";
             // Remember to animate later.
             resultTextElement.textContent += "\nRather chivalrous this one."; 
+        
+        } else if (finalHouse === "Ravenclaw") { // Check if it's Ravenclaw
+            resultTextElement.textContent = ravenclawMessages[0];
+            resultTextElement.textContent += "\n" + ravenclawMessages[1];
+           
+        } else if (finalHouse === "Slytherin") { // Check if it's Slytherin
+            resultTextElement.textContent = slytherinMessages[0];
+            resultTextElement.textContent += "\n" + slytherinMessages[1];
+           
+        } else if (finalHouse === "Hufflepuff") { // Check if it's Hufflepuff
+            resultTextElement.textContent = hufflepuffMessages[0];
+            resultTextElement.textContent += "\n" + hufflepuffMessages[1];
+           
+        } else {
+            // This is in case finalHouse doesn't match any house
+            resultTextElement.textContent = "It seems you haven't been sorted yet! Try the quiz again.";
         }
-
        
 
 
