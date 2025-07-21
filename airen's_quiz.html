@@ -18,7 +18,45 @@ const houseMember = [
 
 const houseFounder = ["Godric Gryffindor", "Rowena Ravenclaw", "Salazar Slytherin", "Helga Hufflepuff"];
 
+// --- CODE: Messages for each house ---
+        const gryffindorMessages = [
+            "I sense bravery, and a desire to help others.",
+            "Rather chivalrous this one."
+        ];
 
+        const ravenclawMessages = [
+            "A sharp mind, indeed.",
+            "A thirst for knowledge and wisdom."
+        ];
+
+        const slytherinMessages = [
+            "Ambitious, cunning, and resourceful.",
+            "You have a knack for leadership."
+        ];
+
+        const hufflepuffMessages = [
+            "Loyalty and patience define you.",
+            "A true and steadfast friend."
+        ];
+
+       
+// --- RESULT FUNCTIONS ---
+
+        // Get a reference to HTML element that will show text
+        const resultTextElement = document.getElementById("result-text");
+
+        // Gryffindor
+        let finalHouse = "Gryffindor";
+
+        // Checks if the final house is Gryffindor
+        if (finalHouse === "Gryffindor") {
+            // Instead of console.log, put text into my HTML element
+            resultTextElement.textContent = "I sense bravery, and a desire to help others.";
+            // Remember to animate later.
+            resultTextElement.textContent += "\nRather chivalrous this one."; 
+        }
+
+       
 
 
        
@@ -28,3 +66,5 @@ const houseFounder = ["Godric Gryffindor", "Rowena Ravenclaw", "Salazar Slytheri
 
 
     </script>
+</body>
+</html>
