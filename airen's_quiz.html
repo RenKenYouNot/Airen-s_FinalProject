@@ -60,19 +60,29 @@ const houseFounder = ["Godric Gryffindor", "Rowena Ravenclaw", "Salazar Slytheri
          */
         function animateSequence(lines, finalCallback) {
             let currentLineIndex = 0;
-            const loadingFrames = ["⏳", "⌛", ".", "..", "..."]; // Loading frames
+            const loadingFrames = [ "🪄"," ", "✨"," ", "🌒"," ", "✨", " ", "🪄", " ", "🌒", " "]; // Loading frames
             const frameSpeed = 400; // Speed for loading animation (milliseconds)
-            const pauseBetweenLines = 1500; // Pause after loading animation (milliseconds)
+            
+            // --- NEW time constants ---
+    const textDisplayDuration = 3000; // show the text BEFORE its loading animation starts (3 second)
+    const loadingAnimationDuration = loadingFrames.length * frameSpeed; // Total time for one full loading animation cycle
+    const pauseAfterLoading = 500; // Short pause AFTER loading animation, BEFORE next text (0.5 seconds)
+    
+
 
             function showNextPart() {
                 if (currentLineIndex < lines.length) {
                     const currentText = lines[currentLineIndex];
                     resultTextElement.textContent = currentText; // Display the line 
 
+                    setTimeout(() => {
+                    resultTextElement.textContent = ""; // Clear text for loading animation
+
+
                     let frameIndex = 0;
                     const animationInterval = setInterval(() => {
                         // Add the current loading frame to the text
-                        resultTextElement.textContent = currentText + " " + loadingFrames[frameIndex];
+                        resultTextElement.textContent = loadingFrames[frameIndex]; // Display only the loading frame
                         frameIndex = (frameIndex + 1) % loadingFrames.length; // Cycle through frames
                     }, frameSpeed);
 
@@ -80,11 +90,13 @@ const houseFounder = ["Godric Gryffindor", "Rowena Ravenclaw", "Salazar Slytheri
                     // clear the interval and move to the next line.
                     setTimeout(() => {
                         clearInterval(animationInterval); // Stop the current loading animation
+                        resultTextElement.textContent = ""; // Clear loading animation
                         currentLineIndex++; // Move to the next line
-                        resultTextElement.textContent = currentText; // Leave just the text before clearing
 
-                        setTimeout(showNextPart, pauseBetweenLines); // Pause before next line starts
-                    }, loadingFrames.length * frameSpeed + 500); // Duration for loading (frames * speed + small buffer)
+                        setTimeout(showNextPart, pauseAfterLoading); // Pause before next line starts
+                    },  loadingAnimationDuration + 200); // Duration for loading animation to run
+
+                    }, textDisplayDuration); // Delay before loading animation starts
 
                 } else {
                     // All lines have been displayed and animated
