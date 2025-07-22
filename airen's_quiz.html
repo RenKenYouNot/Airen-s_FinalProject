@@ -7,68 +7,132 @@
 <body style="font-family: monospace; text-align: center; padding-top: 100px; background-color: #f4f4f4;">
 
     <script>
-// Hogwart House Info Index
+
+// --- HOGWARTS HOUSE INFO INDEX ---
 const hogwartsHouse = ["Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"];
 const houseMember = [
-["Hermione Granger", "Ron Weasley"]  
-["Luna Lovegood", "Filius Flitwick"] 
-["Bellatrix Lestrange", "Severus Snape"] 
+["Hermione Granger", "Ron Weasley"],  
+["Luna Lovegood", "Filius Flitwick"], 
+["Bellatrix Lestrange", "Severus Snape"], 
 ["Nymphadora Tonks", "Cedric Diggory"]
     ];
 
 const houseFounder = ["Godric Gryffindor", "Rowena Ravenclaw", "Salazar Slytherin", "Helga Hufflepuff"];
 
+       
 // --- CODE: Messages for each house ---
         const gryffindorMessages = [
+            "hmmm...",
             "I sense bravery, and a desire to help others.",
             "Rather chivalrous this one."
         ];
 
         const ravenclawMessages = [
+            "hmmm...",
             "A sharp mind, indeed.",
             "A thirst for knowledge and wisdom."
         ];
 
         const slytherinMessages = [
+            "hmmm...",
             "Ambitious, cunning, and resourceful.",
             "You have a knack for leadership."
         ];
 
         const hufflepuffMessages = [
+            "hmmm...",
             "Loyalty and patience define you.",
             "A true and steadfast friend."
         ];
-
+        
        
 // --- RESULT FUNCTIONS ---
 
         // Get a reference to HTML element that will show text
         const resultTextElement = document.getElementById("result-text");
 
-        // Gryffindor
-        let finalHouse = "Gryffindor";
+       // --- REUSABLE ANIMATION FUNCTION ---
+        /**
+         * Display array of text lines in a sequence with the dot animation after each
+         * Calls the callback function after all of the lines and animations are complete
+         * @param {string[]} lines An array of strings (each represent a line of text)
+         * @param {function} finalCallback Function (calls after all lines are displayed and animated)
+         */
+        function animateSequence(lines, finalCallback) {
+            let currentLineIndex = 0;
+            const loadingFrames = ["⏳", "⌛", ".", "..", "..."]; // Loading frames
+            const frameSpeed = 400; // Speed for loading animation (milliseconds)
+            const pauseBetweenLines = 1500; // Pause after loading animation (milliseconds)
 
-        // Checks if the final house is Gryffindor
+            function showNextPart() {
+                if (currentLineIndex < lines.length) {
+                    const currentText = lines[currentLineIndex];
+                    resultTextElement.textContent = currentText; // Display the line 
+
+                    let frameIndex = 0;
+                    const animationInterval = setInterval(() => {
+                        // Add the current loading frame to the text
+                        resultTextElement.textContent = currentText + " " + loadingFrames[frameIndex];
+                        frameIndex = (frameIndex + 1) % loadingFrames.length; // Cycle through frames
+                    }, frameSpeed);
+
+                    // After the animation plays through its frames 
+                    // clear the interval and move to the next line.
+                    setTimeout(() => {
+                        clearInterval(animationInterval); // Stop the current loading animation
+                        currentLineIndex++; // Move to the next line
+                        resultTextElement.textContent = currentText; // Leave just the text before clearing
+
+                        setTimeout(showNextPart, pauseBetweenLines); // Pause before next line starts
+                    }, loadingFrames.length * frameSpeed + 500); // Duration for loading (frames * speed + small buffer)
+
+                } else {
+                    // All lines have been displayed and animated
+                    resultTextElement.textContent = ""; // Clear text element for final result
+                    if (finalCallback) {
+                        finalCallback(); // where the result page (logo/box) will appear
+                    }
+                }
+            }
+
+            // Start the sequence
+            showNextPart();
+        }
+
+
+       // --- HOUSE IF RESULT STATEMENTS ---
+
+       // TESTER!!
+        let finalHouse = "Hufflepuff";
+   
+       // Checks which house it is and starts the animation
         if (finalHouse === "Gryffindor") {
-            // Instead of console.log, put text into my HTML element
-            resultTextElement.textContent = "I sense bravery, and a desire to help others.";
-            // Remember to animate later.
-            resultTextElement.textContent += "\nRather chivalrous this one."; 
-        
-        } else if (finalHouse === "Ravenclaw") { // Check if it's Ravenclaw
-            resultTextElement.textContent = ravenclawMessages[0];
-            resultTextElement.textContent += "\n" + ravenclawMessages[1];
-           
-        } else if (finalHouse === "Slytherin") { // Check if it's Slytherin
-            resultTextElement.textContent = slytherinMessages[0];
-            resultTextElement.textContent += "\n" + slytherinMessages[1];
-           
-        } else if (finalHouse === "Hufflepuff") { // Check if it's Hufflepuff
-            resultTextElement.textContent = hufflepuffMessages[0];
-            resultTextElement.textContent += "\n" + hufflepuffMessages[1];
-           
+            animateSequence(gryffindorMessages, () => {
+                // This runs AFTER *all* Gryffindor text and animations are done
+                console.log("Gryffindor full text animation complete! Time to show the result page (logo/box).");
+                // TODO: Code to display the Gryffindor logo and colored box.
+            });
+
+        } else if (finalHouse === "Ravenclaw") {
+            animateSequence(ravenclawMessages, () => {
+                console.log("Ravenclaw full text animation complete! Time to show the result page (logo/box).");
+                // TODO: Display Ravenclaw logo/box.
+            });
+
+        } else if (finalHouse === "Slytherin") {
+            animateSequence(slytherinMessages, () => {
+                console.log("Slytherin full text animation complete! Time to show the result page (logo/box).");
+                // TODO: Display Slytherin logo/box.
+            });
+
+        } else if (finalHouse === "Hufflepuff") {
+            animateSequence(hufflepuffMessages, () => {
+                console.log("Hufflepuff full text animation complete! Time to show the result page (logo/box).");
+                // TODO: Display Hufflepuff logo/box.
+            });
+
         } else {
-            // This is in case finalHouse doesn't match any house
+            // Fallback if finalHouse doesn't match any of the known houses
             resultTextElement.textContent = "It seems you haven't been sorted yet! Try the quiz again.";
         }
        
