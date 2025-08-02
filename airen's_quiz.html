@@ -137,6 +137,18 @@
 </head>
 <body style="font-family: monospace; text-align: center; padding-top: 100px; background-color: #f4f4f4;">
 
+   <!-- Container holds questions and answer buttons. -->
+        <div id="quiz-container">
+            <h1 id="question"></h1>
+            <div id="answer-buttons"></div>
+        </div>
+   
+    <!-- Animated text. -->
+         <div id="result-text"></div>
+   <!-- Container for final house result. -->
+        <div id="final-result-box" class="house-result-box"></div>
+     
+
     <script>
 
 // --- HOGWARTS HOUSE INFO INDEX ---
@@ -244,6 +256,22 @@ const quizData = [
         ]
     }
 ];
+       // --- Quiz state variables. ---
+            let currentQuestionIndex = 0;
+            const houseScores = {
+                Gryffindor: 0,
+                Hufflepuff: 0,
+                Ravenclaw: 0,
+                Slytherin: 0
+            };
+
+            // --- DOM element references ---
+            const quizContainer = document.getElementById("quiz-container");
+            const questionElement = document.getElementById("question");
+            const answerButtonsElement = document.getElementById("answer-buttons");
+            const resultTextElement = document.getElementById("result-text");
+            const finalResultBox = document.getElementById("final-result-box");
+
 
        
 // --- CODE: Messages for each house ---
@@ -340,40 +368,44 @@ const quizData = [
 
        // --- HOUSE IF RESULT STATEMENTS ---
 
-       // TESTER!!
-        let finalHouse = "Hufflepuff";
-   
-       // Checks which house it is and starts the animation
-        if (finalHouse === "Gryffindor") {
-            animateSequence(gryffindorMessages, () => {
-                // This runs AFTER *all* Gryffindor text and animations are done
-                console.log("Gryffindor full text animation complete! Time to show the result page (logo/box).");
-                // TODO: Code to display the Gryffindor logo and colored box.
-            });
+      function showResult() {
+    // Hide the quiz container
+    quizContainer.style.display = 'none';
+    
+    let finalHouse = null;
+    let highestScore = 0;
 
-        } else if (finalHouse === "Ravenclaw") {
-            animateSequence(ravenclawMessages, () => {
-                console.log("Ravenclaw full text animation complete! Time to show the result page (logo/box).");
-                // TODO: Display Ravenclaw logo/box.
-            });
-
-        } else if (finalHouse === "Slytherin") {
-            animateSequence(slytherinMessages, () => {
-                console.log("Slytherin full text animation complete! Time to show the result page (logo/box).");
-                // TODO: Display Slytherin logo/box.
-            });
-
-        } else if (finalHouse === "Hufflepuff") {
-            animateSequence(hufflepuffMessages, () => {
-                console.log("Hufflepuff full text animation complete! Time to show the result page (logo/box).");
-                // TODO: Display Hufflepuff logo/box.
-            });
-
-        } else {
-            // Fallback if finalHouse doesn't match any of the known houses
-            resultTextElement.textContent = "It seems you haven't been sorted yet! Try the quiz again.";
+    // Find the house with the highest score
+    for (const house in houseScores) {
+        if (houseScores[house] > highestScore) {
+            highestScore = houseScores[house];
+            finalHouse = house;
         }
-       
+    }
+    
+       // Get the correct messages for the final house
+    const messagesWithFinal = [];
+    if (finalHouse === "Gryffindor") {
+        messagesWithFinal.push(...gryffindorMessages);
+    } else if (finalHouse === "Ravenclaw") {
+        messagesWithFinal.push(...ravenclawMessages);
+    } else if (finalHouse === "Slytherin") {
+        messagesWithFinal.push(...slytherinMessages);
+    } else if (finalHouse === "Hufflepuff") {
+        messagesWithFinal.push(...hufflepuffMessages);
+    }
+
+    // Call the animation sequence for the determined house
+    if (finalHouse) {
+        animateSequence(messagesWithFinal, () => {
+            // This is the new part: The callback function to show the result
+            displayFinalResult(finalHouse);
+        });
+    } else {
+        // Fallback if no house is selected
+        resultTextElement.textContent = "It seems you haven't been sorted yet! Try the quiz again.";
+    }
+}
 
 
        
@@ -381,7 +413,8 @@ const quizData = [
        
 
 
-
+      // Start the quiz when the page loads
+          startQuiz();
     </script>
 </body>
 </html>
