@@ -1,420 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
+<head>
     <meta charset="UTF-8">
-  <title>Which Hogwarts House Do You Belong To?</title>
-      <style>
-        /* Import Garamond font */
-        @import url('https://fonts.googleapis.com/css2?family=Garamond:wght@400;700&display=swap');
-
-      body {
-            font-family: 'Garamond', serif; /* Use Garamond */
-            text-align: center;
-            padding-top: 50px; /* Adjusted padding */
-            background-color: #f4f4f4;
-            color: #000000; /* Default text color for body */
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which Hogwarts House Do You Belong To?</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Garamond font -->
+    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Garamond and animations */
+        body {
+            font-family: 'Garamond', serif;
         }
-
-        #quiz-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 90%;
-            margin-bottom: 20px; /* Space between quiz and potential result area */
+        /* Custom animation for the result text */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        #question {
-            font-size: 1.8em;
-            margin-bottom: 30px;
-            color: #000000; /* for question text */
-            font-weight: bold; /* Garamond Bold */
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
         }
-
-        #answer-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px; /* Space between buttons */
-        }
-
-        /* Neutral styling for quiz buttons */
-        .btn {
-            background-color: #C9B9A5; /* light neutral brown */
-            color: white;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            font-family: 'Garamond', serif; /* button text also uses Garamond */
-            font-weight: normal; /* Garamond */
-        }
-
-        .btn:hover {
-            background-color: #B3A592; /* Slightly darker brown shadow */
-            transform: translateY(-2px); /* Slight lift on hover */
-        }
-
-        .btn:active {
-            transform: translateY(0); /* "Press down" effect */
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        #result-text {
-            font-size: 2em; /* Larger font size for messages */
-            font-weight: bold; /* Garamond Bold */
-            color: #0E1A40; /* Ravenclaw Blue for the sorting text */
-            margin-top: 50px; /* Space from buttons to result text */
-            min-height: 80px; /* space for messages */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Styles for the house result display (initially hidden) */
-        .house-result-box {
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            align-items: center;
-            margin-top: 40px;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            width: 80%;
-            max-width: 500px;
-            color: white; /* Default text color for inside the box (override for Hufflepuff) */
-        }
-
-        .house-result-box img {
-            width: 150px;
-            height: 150px;
-            margin-bottom: 20px;
-        }
-
-        .house-result-box h2 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: bold; /* Garamond Bold */
-        }
-
-        .house-result-box p {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            font-weight: normal; /* Garamond */
-        }
-
-        /* Specific house colors for the result boxes - these remain themed */
-        .gryffindor-box {
-            background-color: #740001; /* Gryffindor Red */
-            border: 5px solid #D3A625; /* Gryffindor Gold border */
-        }
-
-        .ravenclaw-box {
-            background-color: #0E1A40; /* Ravenclaw Blue */
-            border: 5px solid #946B2D; /* Ravenclaw Bronze border */
-        }
-
-        .slytherin-box {
-            background-color: #1A472A; /* Slytherin Green */
-            border: 5px solid #5D5D5D; /* Slytherin Silver border */
-        }
-
-        .hufflepuff-box {
-            background-color: #FFD800; /* Hufflepuff Yellow */
-            color: #000000; /* Hufflepuff Black for text */
-            border: 5px solid #000000; /* Hufflepuff Black border */
-        }
-
     </style>
 </head>
-<body style="font-family: monospace; text-align: center; padding-top: 100px; background-color: #f4f4f4;">
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
-   <!-- Container holds questions and answer buttons. -->
-        <div id="quiz-container">
-            <h1 id="question"></h1>
-            <div id="answer-buttons"></div>
-        </div>
-   
-    <!-- Animated text. -->
-         <div id="result-text"></div>
-   <!-- Container for final house result. -->
-        <div id="final-result-box" class="house-result-box"></div>
-     
+    <!-- Container holds quiz questions and answer button -->
+    <div id="quiz-container" class="bg-white p-8 rounded-lg shadow-xl max-w-xl w-full text-center transition-all duration-500">
+        <h1 id="question" class="text-3xl font-bold mb-8 text-black"></h1>
+        <div id="answer-buttons" class="flex flex-col gap-4"></div>
+    </div>
+
+    <!-- Animated text for sorting process -->
+    <div id="result-text" class="text-3xl font-bold mt-12 text-[#0E1A40] text-center min-h-[80px] flex items-center justify-center"></div>
+
+    <!-- Container for final house result(initially hidden) -->
+    <div id="final-result-box" class="hidden flex-col items-center p-8 rounded-2xl shadow-2xl w-full max-w-xl text-white mt-12 transition-all duration-500">
+        <!-- House emblem will be an emoji -->
+        <span id="house-emblem" class="text-7xl mb-4"></span>
+        <h2 id="house-name" class="text-5xl font-bold mb-2"></h2>
+        <p id="house-description" class="text-xl mb-4 font-normal"></p>
+        <!-- Element displays house members and founder -->
+        <p id="house-founder" class="text-lg font-semibold mb-2"></p>
+        <p id="house-members" class="text-lg font-semibold mb-6"></p>
+        <button id="restart-button" class="bg-[#C9B9A5] text-white py-3 px-6 rounded-lg font-semibold shadow-md hover:bg-[#B3A592] transform hover:-translate-y-1 transition-all duration-300">Restart Quiz</button>
+    </div>
 
     <script>
+        // --- HOGWARTS HOUSE INFO INDEX ---
+        const hogwartsHouse = ["Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"];
+        const houseMember = [
+            ["Hermione Granger", "Ron Weasley"],
+            ["Luna Lovegood", "Filius Flitwick"],
+            ["Bellatrix Lestrange", "Severus Snape"],
+            ["Nymphadora Tonks", "Cedric Diggory"]
+        ];
+        const houseFounder = ["Godric Gryffindor", "Rowena Ravenclaw", "Salazar Slytherin", "Helga Hufflepuff"];
 
-// --- HOGWARTS HOUSE INFO INDEX ---
-const hogwartsHouse = ["Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"];
-const houseMember = [
-["Hermione Granger", "Ron Weasley"],  
-["Luna Lovegood", "Filius Flitwick"], 
-["Bellatrix Lestrange", "Severus Snape"], 
-["Nymphadora Tonks", "Cedric Diggory"]
-    ];
+        // --- House Symbols and Descriptions ---
+        const houseSymbols = {
+            Gryffindor: "🦁",
+            Ravenclaw: "🦅",
+            Slytherin: "🐍",
+            Hufflepuff: "🦡"
+        };
+        const houseDescriptions = {
+            Gryffindor: "You are brave, daring, chivalrous, and courageous.",
+            Ravenclaw: "You possess intelligence, wit, wisdom, and a thirst for knowledge.",
+            Slytherin: "You are ambitious, cunning, resourceful, and a leader.",
+            Hufflepuff: "You are loyal, patient, dedicated, and fair-minded."
+        };
 
-const houseFounder = ["Godric Gryffindor", "Rowena Ravenclaw", "Salazar Slytherin", "Helga Hufflepuff"];
+        // --- QUIZ DATA ---
+        const quizData = [
+            {
+                question: "Dawn or Dusk?",
+                answers: [
+                    { text: "Dawn", houses: ["Gryffindor", "Hufflepuff"] },
+                    { text: "Dusk", houses: ["Ravenclaw", "Slytherin"] }
+                ]
+            },
+            {
+                question: "Forest or River?",
+                answers: [
+                    { text: "Forest", houses: ["Gryffindor", "Ravenclaw"] },
+                    { text: "River", houses: ["Hufflepuff", "Slytherin"] }
+                ]
+            },
+            {
+                question: "Moon or Stars?",
+                answers: [
+                    { text: "Moon", houses: ["Ravenclaw", "Slytherin"] },
+                    { text: "Stars", houses: ["Gryffindor", "Hufflepuff"] }
+                ]
+            },
+            {
+                question: "Black or White?",
+                answers: [
+                    { text: "Black", houses: ["Gryffindor", "Slytherin"] },
+                    { text: "White", houses: ["Ravenclaw", "Hufflepuff"] }
+                ]
+            },
+            {
+                question: "Four boxes are placed before you. Which would you try and open?",
+                answers: [
+                    { text: "The small tortoiseshell box, embellished with gold, inside which some small creature seems to be squeaking.", houses: ["Hufflepuff"] },
+                    { text: "The gleaming jet black box with a silver lock and key, marked with a mysterious rune that you know to be the mark of Merlin.", houses: ["Slytherin"] },
+                    { text: "The ornate golden casket, standing on clawed feet, whose inscription warns that both secret knowledge and unbearable temptation lie within.", houses: ["Ravenclaw"] },
+                    { text: "The small pewter box, unassuming and plain, with a scratched message upon it that reads ‘I open only for the worthy.'", houses: ["Gryffindor"] }
+                ]
+            },
+            {
+                question: "Once every century, the Flutterby bush produces flowers that adapt their scent to attract the unwary. If it lured you, it would smell of:",
+                answers: [
+                    { text: "The forest after a night of rain", houses: ["Ravenclaw"] },
+                    { text: "The sea", houses: ["Slytherin"] },
+                    { text: "Hot Cocoa and a blazing log fire", houses: ["Gryffindor"] },
+                    { text: "A loved one", houses: ["Hufflepuff"] }
+                ]
+            },
+            {
+                question: "Which of the following do you find most difficult to deal with?",
+                answers: [
+                    { text: "Loneliness", houses: ["Hufflepuff"] },
+                    { text: "Boredom", houses: ["Gryffindor"] },
+                    { text: "Cold", houses: ["Ravenclaw"] },
+                    { text: "Being Ignored", houses: ["Slytherin"] }
+                ]
+            },
+            {
+                question: "Which of the following would you most hate people to call you?",
+                answers: [
+                    { text: "Ordinary", houses: ["Slytherin"] },
+                    { text: "Ignorant", houses: ["Ravenclaw"] },
+                    { text: "Cowardly", houses: ["Gryffindor"] },
+                    { text: "Selfish", houses: ["Hufflepuff"] }
+                ]
+            },
+            {
+                question: "If you were attending Hogwarts, which pet would you choose to take with you?",
+                answers: [
+                    { text: "Cat", houses: ["Ravenclaw"] },
+                    { text: "Owl", houses: ["Gryffindor"] },
+                    { text: "Toad", houses: ["Hufflepuff"] },
+                    { text: "Chameleon", houses: ["Slytherin"] }
+                ]
+            },
+            {
+                question: "Which road tempts you most?",
+                answers: [
+                    { text: "The wide, sunny, grassy lane", houses: ["Hufflepuff"] },
+                    { text: "The narrow, dark, lantern-lit alley", houses: ["Slytherin"] },
+                    { text: "The twisting, leaf-strewn path through woods", houses: ["Gryffindor"] },
+                    { text: "The cobbled street lined with ancient buildings", houses: ["Ravenclaw"] }
+                ]
+            },
+            {
+                question: "How would you like to be known to history?",
+                answers: [
+                    { text: "The Wise", houses: ["Ravenclaw"] },
+                    { text: "The bold", houses: ["Gryffindor"] },
+                    { text: "The Great", houses: ["Slytherin"] },
+                    { text: "The Good", houses: ["Hufflepuff"] }
+                ]
+            }
+        ];
 
-       // --- QUIZ DATA ---
-const quizData = [
-    {
-        question: "Dawn or Dusk?",
-        answers: [
-            { text: "Dawn", houses: ["Gryffindor", "Hufflepuff"] },
-            { text: "Dusk", houses: ["Ravenclaw", "Slytherin"] }
-        ]
-    },
-    {
-        question: "Forest or River?",
-        answers: [
-            { text: "Forest", houses: ["Gryffindor", "Ravenclaw"] },
-            { text: "River", houses: ["Hufflepuff", "Slytherin"] }
-        ]
-    },
-    {
-        question: "Moon or Stars?",
-        answers: [
-            { text: "Moon", houses: ["Ravenclaw", "Slytherin"] },
-            { text: "Stars", houses: ["Gryffindor", "Hufflepuff"] }
-        ]
-    },
-    {
-        question: "Black or White?",
-        answers: [
-            { text: "Black", houses: ["Gryffindor", "Slytherin"] },
-            { text: "White", houses: ["Ravenclaw", "Hufflepuff"] }
-        ]
-    },
-    {
-        question: "Four boxes are placed before you. Which would you try and open?",
-        answers: [
-            { text: "The small tortoiseshell box, embellished with gold, inside which some small creature seems to be squeaking.", houses: ["Hufflepuff"] },
-            { text: "The gleaming jet black box with a silver lock and key, marked with a mysterious rune that you know to be the mark of Merlin.", houses: ["Slytherin"] },
-            { text: "The ornate golden casket, standing on clawed feet, whose inscription warns that both secret knowledge and unbearable temptation lie within.", houses: ["Ravenclaw"] },
-            { text: "The small pewter box, unassuming and plain, with a scratched message upon it that reads ‘I open only for the worthy.'", houses: ["Gryffindor"] }
-        ]
-    },
-    {
-        question: "Once every century, the Flutterby bush produces flowers that adapt their scent to attract the unwary. If it lured you, it would smell of:",
-        answers: [
-            { text: "The forest after a night of rain", houses: ["Ravenclaw"] },
-            { text: "The sea", houses: ["Slytherin"] },
-            { text: "Hot Cocoa and a blazing log fire", houses: ["Gryffindor"] },
-            { text: "A loved one", houses: ["Hufflepuff"] }
-        ]
-    },
-    {
-        question: "Which of the following do you find most difficult to deal with?",
-        answers: [
-            { text: "Loneliness", houses: ["Hufflepuff"] },
-            { text: "Boredom", houses: ["Gryffindor"] },
-            { text: "Cold", houses: ["Ravenclaw"] },
-            { text: "Being Ignored", houses: ["Slytherin"] }
-        ]
-    },
-    {
-        question: "Which of the following would you most hate people to call you?",
-        answers: [
-            { text: "Ordinary", houses: ["Slytherin"] },
-            { text: "Ignorant", houses: ["Ravenclaw"] },
-            { text: "Cowardly", houses: ["Gryffindor"] },
-            { text: "Selfish", houses: ["Hufflepuff"] }
-        ]
-    },
-    {
-        question: "If you were attending Hogwarts, which pet would you choose to take with you?",
-        answers: [
-            { text: "Cat", houses: ["Ravenclaw"] },
-            { text: "Owl", houses: ["Gryffindor"] }, 
-            { text: "Toad", houses: ["Hufflepuff"] },
-            { text: "Chameleon", houses: ["Slytherin"] }
-        ]
-    },
-    {
-        question: "Which road tempts you most?",
-        answers: [
-            { text: "The wide, sunny, grassy lane", houses: ["Hufflepuff"] },
-            { text: "The narrow, dark, lantern-lit alley", houses: ["Slytherin"] },
-            { text: "The twisting, leaf-strewn path through woods", houses: ["Gryffindor"] },
-            { text: "The cobbled street lined with ancient buildings", houses: ["Ravenclaw"] }
-        ]
-    },
-    {
-        question: "How would you like to be known to history?",
-        answers: [
-            { text: "The Wise", houses: ["Ravenclaw"] },
-            { text: "The bold", houses: ["Gryffindor"] },
-            { text: "The Great", houses: ["Slytherin"] },
-            { text: "The Good", houses: ["Hufflepuff"] }
-        ]
-    }
-];
-       // --- Quiz state variables. ---
-            let currentQuestionIndex = 0;
-            const houseScores = {
-                Gryffindor: 0,
-                Hufflepuff: 0,
-                Ravenclaw: 0,
-                Slytherin: 0
-            };
+        // --- Quiz state variables ---
+        let currentQuestionIndex = 0;
+        const houseScores = {
+            Gryffindor: 0,
+            Hufflepuff: 0,
+            Ravenclaw: 0,
+            Slytherin: 0
+        };
 
-            // --- DOM element references ---
-            const quizContainer = document.getElementById("quiz-container");
-            const questionElement = document.getElementById("question");
-            const answerButtonsElement = document.getElementById("answer-buttons");
-            const resultTextElement = document.getElementById("result-text");
-            const finalResultBox = document.getElementById("final-result-box");
+        // --- DOM element references ---
+        const quizContainer = document.getElementById("quiz-container");
+        const questionElement = document.getElementById("question");
+        const answerButtonsElement = document.getElementById("answer-buttons");
+        const resultTextElement = document.getElementById("result-text");
+        const finalResultBox = document.getElementById("final-result-box");
+        const restartButton = document.getElementById("restart-button");
 
+        // --- QUIZ LOGIC ---
 
-       
-// --- CODE: Messages for each house ---
+        /**
+         * Starts the quiz by resetting and displays the first question.
+         */
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            // Reset scores
+            for (const house in houseScores) {
+                houseScores[house] = 0;
+            }
+            // Show quiz container, hide result box
+            quizContainer.classList.remove('hidden');
+            finalResultBox.classList.add('hidden');
+            resultTextElement.textContent = "";
+
+            // Show first question
+            showQuestion();
+        }
+
+        /**
+         * Display the current question and its answer buttons.
+         */
+        function showQuestion() {
+            // Clear previous buttons
+            answerButtonsElement.innerHTML = '';
+            
+            const currentQuizItem = quizData[currentQuestionIndex];
+            questionElement.textContent = currentQuizItem.question;
+
+            // Create buttons for each answer
+            currentQuizItem.answers.forEach(answer => {
+                const button = document.createElement("button");
+                button.textContent = answer.text;
+                // Add Tailwind classes for button styling
+                button.classList.add("btn", "bg-[#C9B9A5]", "text-white", "py-3", "px-6", "rounded-lg", "font-normal", "shadow-md", "hover:bg-[#B3A592]", "transform", "hover:-translate-y-1", "transition-all", "duration-300", "w-full", "text-left");
+                button.addEventListener('click', () => selectAnswer(answer.houses));
+                answerButtonsElement.appendChild(button);
+            });
+        }
+
+        /**
+         * Handle user answer selection, update scores, and move to next question or show result.
+         * @param {string[]} selectedHouses The house associated with the chosen answer.
+         */
+        function selectAnswer(selectedHouses) {
+            // Update scores
+            selectedHouses.forEach(house => {
+                houseScores[house]++;
+            });
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        // --- CODE: Messages for each house ---
         const gryffindorMessages = [
             "hmmm...",
             "I sense bravery, and a desire to help others.",
             "Rather chivalrous this one."
         ];
-
         const ravenclawMessages = [
             "hmmm...",
             "A sharp mind, indeed.",
             "A thirst for knowledge and wisdom."
         ];
-
         const slytherinMessages = [
             "hmmm...",
             "Ambitious, cunning, and resourceful.",
             "You have a knack for leadership."
         ];
-
         const hufflepuffMessages = [
             "hmmm...",
             "Loyalty and patience define you.",
             "A true and steadfast friend."
         ];
-        
-       
-// --- RESULT FUNCTIONS ---
 
-        // Get a reference to HTML element that will show text
-        const resultTextElement = document.getElementById("result-text");
-
-       // --- REUSABLE ANIMATION FUNCTION ---
+        // --- REUSABLE ANIMATION FUNCTION ---
         /**
          * Display array of text lines in a sequence with the dot animation after each
-         * Calls the callback function after all of the lines and animations are complete
-         * @param {string[]} lines An array of strings (each represent a line of text)
+         * Call the callback function after all of the lines and animations are complete
+         * @param {string[]} line An array of strings (each represent a line of text)
          * @param {function} finalCallback Function (calls after all lines are displayed and animated)
          */
         function animateSequence(lines, finalCallback) {
             let currentLineIndex = 0;
-            const loadingFrames = [ "🪄"," ", "✨"," ", "🌒"," ", "✨", " ", "🪄", " ", "🌒", " "]; // Loading frames
+            const loadingFrames = ["🪄", " ", "✨", " ", "🌒", " ", "✨", " ", "🪄", " ", "🌒", " "]; // Loading frames
             const frameSpeed = 400; // Speed for loading animation (milliseconds)
-            
-            // --- NEW time constants ---
-    const textDisplayDuration = 3000; // show the text BEFORE its loading animation starts (3 second)
-    const loadingAnimationDuration = loadingFrames.length * frameSpeed; // Total time for one full loading animation cycle
-    const pauseAfterLoading = 500; // Short pause AFTER loading animation, BEFORE next text (0.5 seconds)
-    
-
+            const textDisplayDuration = 3000; // show the text BEFORE its loading animation starts (3 second)
+            const loadingAnimationDuration = loadingFrames.length * frameSpeed; // Total time for one full loading animation cycle
+            const pauseAfterLoading = 500; // Short pause AFTER loading animation, BEFORE next text (0.5 seconds)
 
             function showNextPart() {
                 if (currentLineIndex < lines.length) {
                     const currentText = lines[currentLineIndex];
-                    resultTextElement.textContent = currentText; // Display the line 
+                    resultTextElement.textContent = currentText; // Display the line
 
                     setTimeout(() => {
-                    resultTextElement.textContent = ""; // Clear text for loading animation
+                        resultTextElement.textContent = ""; // Clear text for loading animation
+                        let frameIndex = 0;
+                        const animationInterval = setInterval(() => {
+                            resultTextElement.textContent = loadingFrames[frameIndex];
+                            frameIndex = (frameIndex + 1) % loadingFrames.length;
+                        }, frameSpeed);
 
+                        setTimeout(() => {
+                            clearInterval(animationInterval);
+                            resultTextElement.textContent = "";
+                            currentLineIndex++;
+                            setTimeout(showNextPart, pauseAfterLoading);
+                        }, loadingAnimationDuration + 200);
 
-                    let frameIndex = 0;
-                    const animationInterval = setInterval(() => {
-                        // Add the current loading frame to the text
-                        resultTextElement.textContent = loadingFrames[frameIndex]; // Display only the loading frame
-                        frameIndex = (frameIndex + 1) % loadingFrames.length; // Cycle through frames
-                    }, frameSpeed);
-
-                    // After the animation plays through its frames 
-                    // clear the interval and move to the next line.
-                    setTimeout(() => {
-                        clearInterval(animationInterval); // Stop the current loading animation
-                        resultTextElement.textContent = ""; // Clear loading animation
-                        currentLineIndex++; // Move to the next line
-
-                        setTimeout(showNextPart, pauseAfterLoading); // Pause before next line starts
-                    },  loadingAnimationDuration + 200); // Duration for loading animation to run
-
-                    }, textDisplayDuration); // Delay before loading animation starts
+                    }, textDisplayDuration);
 
                 } else {
-                    // All lines have been displayed and animated
-                    resultTextElement.textContent = ""; // Clear text element for final result
+                    resultTextElement.textContent = "";
                     if (finalCallback) {
-                        finalCallback(); // where the result page (logo/box) will appear
+                        finalCallback();
                     }
                 }
             }
-
-            // Start the sequence
             showNextPart();
         }
 
+        // --- HOUSE IF RESULT STATEMENTS ---
+        function showResult() {
+            // Hide the quiz container
+            quizContainer.classList.add('hidden');
+            
+            let finalHouse = null;
+            let highestScore = 0;
 
-       // --- HOUSE IF RESULT STATEMENTS ---
+            // Find the house with the highest score
+            for (const house in houseScores) {
+                if (houseScores[house] > highestScore) {
+                    highestScore = houseScores[house];
+                    finalHouse = house;
+                }
+            }
 
-      function showResult() {
-    // Hide the quiz container
-    quizContainer.style.display = 'none';
-    
-    let finalHouse = null;
-    let highestScore = 0;
+            // Messages for the final house
+            const messagesWithFinal = [];
+            if (finalHouse === "Gryffindor") {
+                messagesWithFinal.push(...gryffindorMessages);
+            } else if (finalHouse === "Ravenclaw") {
+                messagesWithFinal.push(...ravenclawMessages);
+            } else if (finalHouse === "Slytherin") {
+                messagesWithFinal.push(...slytherinMessages);
+            } else if (finalHouse === "Hufflepuff") {
+                messagesWithFinal.push(...hufflepuffMessages);
+            }
 
-    // Find the house with the highest score
-    for (const house in houseScores) {
-        if (houseScores[house] > highestScore) {
-            highestScore = houseScores[house];
-            finalHouse = house;
+            // Call the animation sequence for the determined house
+            if (finalHouse) {
+                animateSequence(messagesWithFinal, () => {
+                    displayFinalResult(finalHouse);
+                });
+            } else {
+                // Fallback if no house is selected
+                resultTextElement.textContent = "It seems you haven't been sorted yet! Try the quiz again.";
+            }
         }
-    }
-    
-       // Get the correct messages for the final house
-    const messagesWithFinal = [];
-    if (finalHouse === "Gryffindor") {
-        messagesWithFinal.push(...gryffindorMessages);
-    } else if (finalHouse === "Ravenclaw") {
-        messagesWithFinal.push(...ravenclawMessages);
-    } else if (finalHouse === "Slytherin") {
-        messagesWithFinal.push(...slytherinMessages);
-    } else if (finalHouse === "Hufflepuff") {
-        messagesWithFinal.push(...hufflepuffMessages);
-    }
+        
+        /**
+         * Display final house result card.
+         * @param {string} house The name of the final house.
+         */
+        function displayFinalResult(house) {
+            // Remove previous house color class
+            finalResultBox.classList.remove('gryffindor-box', 'ravenclaw-box', 'slytherin-box', 'hufflepuff-box');
 
-    // Call the animation sequence for the determined house
-    if (finalHouse) {
-        animateSequence(messagesWithFinal, () => {
-            // This is the new part: The callback function to show the result
-            displayFinalResult(finalHouse);
-        });
-    } else {
-        // Fallback if no house is selected
-        resultTextElement.textContent = "It seems you haven't been sorted yet! Try the quiz again.";
-    }
-}
+            // Apply new house-specific classes and show box
+            finalResultBox.classList.remove('hidden');
+            finalResultBox.classList.add('animate-fade-in');
 
+            // House specific colors
+            if (house === "Gryffindor") {
+                finalResultBox.style.backgroundColor = '#740001';
+                finalResultBox.style.borderColor = '#D3A625';
+                finalResultBox.style.borderWidth = '5px';
+            } else if (house === "Ravenclaw") {
+                finalResultBox.style.backgroundColor = '#0E1A40';
+                finalResultBox.style.borderColor = '#946B2D';
+                finalResultBox.style.borderWidth = '5px';
+            } else if (house === "Slytherin") {
+                finalResultBox.style.backgroundColor = '#1A472A';
+                finalResultBox.style.borderColor = '#5D5D5D';
+                finalResultBox.style.borderWidth = '5px';
+            } else if (house === "Hufflepuff") {
+                finalResultBox.style.backgroundColor = '#FFD800';
+                finalResultBox.style.color = '#000000';
+                finalResultBox.style.borderColor = '#000000';
+                finalResultBox.style.borderWidth = '5px';
+            }
 
-       
-       
-       
+            // Emblem and description
+            document.getElementById("house-emblem").textContent = houseSymbols[house];
+            document.getElementById("house-name").textContent = house;
+            document.getElementById("house-description").textContent = houseDescriptions[house];
 
+            // --- Display house members and founder ---
+            const houseIndex = hogwartsHouse.indexOf(house);
+            const founderElement = document.getElementById("house-founder");
+            const membersElement = document.getElementById("house-members");
+            
+            if (houseIndex !== -1) {
+                founderElement.textContent = `Founder: ${houseFounder[houseIndex]}`;
+                membersElement.textContent = `Notable Members: ${houseMember[houseIndex].join(', ')}`;
+            }
+          
+        }
 
-      // Start the quiz when the page loads
-          startQuiz();
+        // Listener to the restart button, call the startQuiz function again
+        restartButton.addEventListener("click", startQuiz);
+
+        // Start the quiz when the page loads
+        startQuiz();
     </script>
 </body>
 </html>
